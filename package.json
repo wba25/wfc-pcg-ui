@@ -1,0 +1,30 @@
+{
+  "name": "wfc-pcg-server",
+  "version": "1.0.0",
+  "description": "Generate maps using simple tiled model Wave Function Collapsed",
+  "main": "index.js",
+  "scripts": {
+    "test": "dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wba25/wfc-pcg-server.git"
+  },
+  "keywords": [
+    "game",
+    "pcg",
+    "wfc"
+  ],
+  "author": "Wellington Almeida",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wba25/wfc-pcg-server/issues"
+  },
+  "homepage": "https://github.com/wba25/wfc-pcg-server#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "14.19.3"
+  }  
+}
