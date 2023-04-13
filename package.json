@@ -2,9 +2,10 @@
   "name": "wfc-pcg-server",
   "version": "1.0.0",
   "description": "Generate maps using simple tiled model Wave Function Collapsed",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "dev"
+    "test": "dev",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,5 @@
   },
   "engines": {
     "node": "14.19.3"
-  }  
+  }
 }
