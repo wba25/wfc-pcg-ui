@@ -5,6 +5,11 @@ export function getObjValues(obj) {
 }
 
 
+export function objIsEmpty(obj) {
+    return Object.getOwnPropertyNames(obj).length === 0;
+}
+
+
 export async function readFileAsDataURL(files) {
     if (files && files.length > 0) {
         let result_base64 = await new Promise((resolve) => {
@@ -15,4 +20,12 @@ export async function readFileAsDataURL(files) {
         return result_base64;
     }
     return null;
+}
+
+export function handleHTTPRequestResposte(response) {
+    if (!response) throw "Error no servidor";
+    if (response.status === 200) {
+        return response.data;
+    }
+    throw response.data;
 }

@@ -94,9 +94,7 @@ const store = createStore({
   },
   actions: {
     indexProcess: async function({ state, commit }) {
-      // axios.defaults.headers.common['Content-Type'] ='application/json;charset=utf-8';
-      // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-      return axios.get('http://localhost:8080/api/processes');
+      return axios.get("https://wfc-pcg.herokuapp.com/api/processes");
     },
     storeProcess: async function({ state, commit }, payload) {
       var res = await api.post("processes", payload).catch(function(error) {
