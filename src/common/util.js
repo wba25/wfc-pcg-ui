@@ -4,11 +4,13 @@ export function getObjValues(obj) {
     });
 }
 
-
 export function objIsEmpty(obj) {
     return Object.getOwnPropertyNames(obj).length === 0;
 }
 
+export function delay(ms) {
+  return new Promise(res => setTimeout(res, ms));
+}
 
 export async function readFileAsDataURL(files) {
     if (files && files.length > 0) {

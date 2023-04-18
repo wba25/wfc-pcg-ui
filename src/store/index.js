@@ -1,7 +1,9 @@
 import { createStore } from "vuex";
 import { getObjValues } from "../common/util.js";
-import { api } from "@/services";
+import { loadAssets } from "../common/tile.js";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
+import { $emit } from "../common/event";
 
 const store = createStore({
   state() {
@@ -28,8 +30,19 @@ const store = createStore({
         state.unique = unique;
     },
     // Tiles
-    resetTiles(state, tiles = []) {
-      state.tiles = tiles;
+    async resetTiles(state, tiles = []) {
+      let payload = {};
+      for (let i = 0; i < tiles.length; i++) {
+        let assets = await loadAssets(state.path, tiles[i], state.unique);
+        payload[uuidv4()] = {
+          name: tiles[i]["name"] || "",
+          symmetry: tiles[i]["symmetry"] || "X",
+          weight: tiles[i]["weight"] || 1,
+          assets: assets || []
+        };
+      }
+      state.tiles = payload;
+      $emit("tiles-loaded");
     },
     addTile(state, payload) {
       state.tiles[payload["id"]] = payload["tile"];
@@ -39,7 +52,14 @@ const store = createStore({
     },
     // Neighbors
     resetNeighbors(state, neighbors = []) {
-      state.neighbors = neighbors;
+      let payload = {};
+      for (let i = 0; i < neighbors.length; i++) {
+        payload[uuidv4()] = {
+          left: neighbors[i]["left"] || "",
+          right: neighbors[i]["right"] || "",
+        };
+      }
+      state.neighbors = payload;
     },
     addNeighbor(state, payload) {
       state.neighbors[payload["id"]] = payload["neighbor"];
@@ -94,13 +114,10 @@ const store = createStore({
   },
   actions: {
     indexProcess: async function({ state, commit }) {
-      return axios.get("https://wfc-pcg.herokuapp.com/api/processes");
+      return axios.get(process.env.VUE_APP_SERVER_URL + "/api/processes");
     },
     storeProcess: async function({ state, commit }, payload) {
-      var res = await api.post("processes", payload).catch(function(error) {
-        return error.response;
-      });
-      return res.data;
+      return axios.post(process.env.VUE_APP_SERVER_URL + "/api/processes", payload);
     },
   }
 });

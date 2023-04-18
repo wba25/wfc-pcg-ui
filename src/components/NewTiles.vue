@@ -113,6 +113,7 @@ export default {
     },
     unique(newUnique, oldUnique) {
       if (newUnique !== oldUnique) {
+        console.log("unique watch", newUnique, oldUnique);
         this.setUnique(newUnique);
       }
     },
@@ -165,7 +166,6 @@ export default {
     },
     next() {
       if (this.validateTiles()) {
-        this.resetNeighbors();
         this.setRegisterStage(1);
       }
     },

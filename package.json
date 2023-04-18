@@ -10,6 +10,7 @@
     "@mdi/font": "7.0.96",
     "axios": "^1.3.5",
     "roboto-fontface": "*",
+    "tiny-emitter": "^2.1.0",
     "uuid": "^9.0.0",
     "vue": "^3.2.38",
     "vue-router": "^4.0.0",

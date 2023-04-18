@@ -63,9 +63,10 @@
     watch: {},
     mounted () {
       this.initNeighborsOpts();
+      this.initNeighborsData(this.getNeighbors);
     },
     computed: {
-      ...mapGetters(["tilemap"])
+      ...mapGetters(["tilemap", "getNeighbors"])
     },
     methods: {
       ...mapActions(["storeProcess"]),
@@ -76,6 +77,13 @@
       },
       generateNewNeighborId() {
         return uuidv4();
+      },
+      initNeighborsData(rawNeighbors) {
+        Object.keys(rawNeighbors).forEach((neighborId) => {
+          this.neighbors.push({
+            id: neighborId,
+          });
+        });
       },
       initNeighborsOpts(){
         this.neighborsOpts = this.tilemap.tiles;
@@ -101,11 +109,11 @@
         }
         if (this.errors.length === 0) {
           try {
+            // TODO: corrigir
             let res = await this.storeProcess(this.tilemap);
             if (!res) {
               throw "Error no servidor";
             }
-            console.log("res", res);
           } catch (error) {
             this.errors.push({
               title: "Erro ao criar mapa",

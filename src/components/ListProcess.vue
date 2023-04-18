@@ -12,7 +12,7 @@
           <v-btn :disabled="loadingProcess" size="large" color="blue" role="link" @click="$router.push('/novo')">Novo</v-btn>
         </v-col>
       </v-row>
-      <v-table v-if="!loading" density="comfortable" fixed-header="true">
+      <v-table v-if="!loading" density="comfortable" :fixed-header="true">
         <thead>
           <tr>
             <th>Set</th>
@@ -32,6 +32,7 @@
             <td>
               <v-btn
                 :disabled="loadingProcess"
+                @click="editTilemap(item)"
                 icon="mdi-image-edit"
                 density="compact"
                 flat
@@ -59,24 +60,29 @@
 </template>
 
 <script>
-  import { mapActions } from "vuex";
-  import { handleHTTPRequestResposte, objIsEmpty } from "../common/util.js";
+  import { $on, $off } from "../common/event";
+  import { mapActions, mapMutations } from "vuex";
+  import { handleHTTPRequestResposte, objIsEmpty, delay } from "../common/util.js";
   export default {
     data () {
       return {
         processes: [],
         loading: false,
-        loadingProcess: true,
+        loadingProcess: false,
         loadingProcesses: {},
       }
     },
     mounted() {
       this.getProcesses();
     },
+    beforeDestroy() {
+      $off("tiles-loaded");
+    },
     methods: {
       ...mapActions(["indexProcess"]),
+      ...mapMutations(["setRegisterStage", "setPath", "setTilesize", "setUnique", "resetTiles", "resetNeighbors"]),
       formatPath(path) {
-        return path.split("/")[1].toUpperCase();
+        return path.split("/")[1];
       },
       async getProcesses() {
         this.loading = true;
@@ -88,15 +94,27 @@
         }
         this.loading = false;
       },
-      delay(ms) {
-        return new Promise(res => setTimeout(res, ms));
-      },
       async generateTilemap(path) {
         if (!objIsEmpty(this.loadingProcesses)) return;
         this.loadingProcesses[path] = true;
-        await this.delay(4000);
+        await delay(4000);
         delete this.loadingProcesses[path];
       },
+      async editTilemap(rawData) {
+        const data = JSON.parse(JSON.stringify(rawData));
+        this.loadingProcess = true;
+        this.loadingProcesses[data.path] = true;
+        this.setRegisterStage(0);
+        this.setPath(this.formatPath(data.path));
+        this.setTilesize(data.tilesize);
+        this.setUnique(data.unique);
+        this.resetTiles(data.tiles);
+        this.resetNeighbors(data.neighbors);
+        $on("tiles-loaded", () => {
+          this.$router.push('/novo');
+        });
+      },
+
     },
   }
 </script>

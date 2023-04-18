@@ -17,7 +17,7 @@ export default defineConfig({
       autoImport: true,
     }),
   ],
-  define: { 'process.env': {} },
+  define: { 'process.env': { VUE_APP_SERVER_URL: 'https://wfc-pcg.herokuapp.com' } },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
