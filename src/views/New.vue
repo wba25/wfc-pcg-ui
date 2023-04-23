@@ -1,6 +1,6 @@
 <template>
-  <NewTiles v-if="getRegisterStage == 0"/>
-  <NewNeighbors v-else/>
+  <NewTiles v-show="getRegisterStage == 0"/>
+  <NewNeighbors v-show="getRegisterStage == 1"/>
 </template>
 
 <script>
