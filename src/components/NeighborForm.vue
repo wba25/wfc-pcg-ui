@@ -1,7 +1,7 @@
 <template>
   <v-card
-    width="325px"
-    height="325px"
+    width="270px"
+    height="270px"
     elevation="6"
     class="overflow-y-auto pa-4 ml-4"
     :image="bgImage"
@@ -52,39 +52,41 @@
           </v-col>
         </v-row>
         <v-row align="center" justify="space-between">
-          <v-col>
+          <v-col class="col-no-grow">
             <v-btn-toggle
               v-model="leftIndex"
               v-if="leftVariants.length > 0"
               color="primary"
               mandatory
               density="compact"
+              class="custom-btn-toggle-compact"
             >
               <v-btn
                 v-for="i in leftVariants"
                 :value="i"
                 :icon="'mdi-numeric-' + i"
                 density="compact"
-                height="28"
-                width="28"
+                height="20"
+                width="20"
               ></v-btn>
             </v-btn-toggle> 
           </v-col>
-          <v-col>
+          <v-col class="col-no-grow">
             <v-btn-toggle
               v-model="rightIndex"
               v-if="rightVariants.length > 0"
               color="primary"
               mandatory
               density="compact"
+              class="custom-btn-toggle-compact"
             >
               <v-btn
                 v-for="i in rightVariants"
                 :value="i"
                 :icon="'mdi-numeric-' + i"
                 density="compact"
-                height="28"
-                width="28"
+                height="20"
+                width="20"
               ></v-btn>
             </v-btn-toggle> 
           </v-col>
@@ -248,6 +250,14 @@
   }
 </script>
 <style scoped>
+.col-no-grow {
+  flex-grow: 0 !important;
+}
+
+.custom-btn-toggle-compact {
+  height: 20px !important;
+}
+
 .float-btn {
   position: absolute;
   top: 0;

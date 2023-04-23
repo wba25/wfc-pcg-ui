@@ -1,5 +1,5 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height" :fluid="true">
     <v-responsive class="d-flex align-center fill-height">
       <v-row>
         <v-col cols="auto" v-for="neighbor in neighbors">
