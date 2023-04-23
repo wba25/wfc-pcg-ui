@@ -119,6 +119,9 @@ const store = createStore({
     storeProcess: async function({ state, commit }, payload) {
       return axios.post(process.env.VUE_APP_SERVER_URL + "/api/processes", payload);
     },
+    generate: async function({ state, commit }, name) {
+      return axios.get(process.env.VUE_APP_SERVER_URL + "/api/processes/" + name + "/generate");
+    },
   }
 });
 

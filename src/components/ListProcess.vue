@@ -62,7 +62,8 @@
 <script>
   import { $on, $off } from "../common/event";
   import { mapActions, mapMutations } from "vuex";
-  import { handleHTTPRequestResposte, objIsEmpty, delay } from "../common/util.js";
+  import { getBlobFromURL } from "../common/tile.js";
+  import { handleHTTPRequestResposte, objIsEmpty, downloadFile } from "../common/util.js";
   export default {
     data () {
       return {
@@ -79,7 +80,7 @@
       $off("tiles-loaded");
     },
     methods: {
-      ...mapActions(["indexProcess"]),
+      ...mapActions(["indexProcess", "generate"]),
       ...mapMutations(["setRegisterStage", "setPath", "setTilesize", "setUnique", "resetTiles", "resetNeighbors"]),
       formatPath(path) {
         return path.split("/")[1];
@@ -97,7 +98,18 @@
       async generateTilemap(path) {
         if (!objIsEmpty(this.loadingProcesses)) return;
         this.loadingProcesses[path] = true;
-        await delay(4000);
+        try {
+          const tileName = this.formatPath(path).toLocaleLowerCase();
+          const raw = await this.generate(tileName);
+          let result_url = handleHTTPRequestResposte(raw);
+          if (result_url) {
+            result_url = process.env.VUE_APP_SERVER_URL + "/" + result_url;
+            let blob = await getBlobFromURL(result_url);
+            downloadFile(blob, tileName + ".png");
+          }
+        } catch (error) {
+          alert(error);
+        }
         delete this.loadingProcesses[path];
       },
       async editTilemap(rawData) {
