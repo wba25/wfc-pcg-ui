@@ -134,7 +134,6 @@
           this.loadImage(this.left).then((img) => {
             this.leftImage = img;
           });
-          this["leftIndex"] = 0;
           this.commitNeighborData();
         }
       },
@@ -143,7 +142,6 @@
           this.loadImage(this.right).then((img) => {
             this.rightImage = img;
           });
-          this["rightIndex"] = 0;
           this.commitNeighborData();
         }
       },
@@ -171,12 +169,21 @@
     mounted: function () {
       const storedNeighbor = this.getNeighbor(this.neighborId);
       if (storedNeighbor) {
-        [this.left, this.leftIndex] = storedNeighbor.left.split(" ");
-        [this.right, this.rightIndex] = storedNeighbor.right.split(" ");
-        if (!this.leftIndex) {
+        const leftNeighbor = storedNeighbor["left"].split(" ");
+        if (leftNeighbor.length > 1) {
+          this.left = leftNeighbor[0];
+          this.leftIndex = parseInt(leftNeighbor[1]);
+        } else {
+          this.left = leftNeighbor[0];
           this.leftIndex = 0;
         }
-        if (!this.rightIndex) {
+        
+        const rightNeighbor = storedNeighbor["right"].split(" ");
+        if (rightNeighbor.length > 1) {
+          this.right = rightNeighbor[0];
+          this.rightIndex = parseInt(rightNeighbor[1]);
+        } else {
+          this.right = rightNeighbor[0];
           this.rightIndex = 0;
         }
       } else {

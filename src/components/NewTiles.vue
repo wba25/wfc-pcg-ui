@@ -127,7 +127,7 @@ export default {
     ...mapGetters(["tilemap", "getPathName", "getTilesize", "getTiles", "getUnique"]),
   },
   methods: {
-    ...mapMutations(["setPath", "setTilesize", "setRegisterStage", "removeTile", "setUnique", "resetNeighbors"]),
+    ...mapMutations(["setPath", "setTilesize", "setRegisterStage", "removeTile", "setUnique"]),
     removeTileWithId(tileId) {
       this.tiles = this.tiles.filter((tile) => tile.id !== tileId);
       this.removeTile(tileId);
