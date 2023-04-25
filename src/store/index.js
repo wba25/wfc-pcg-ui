@@ -24,10 +24,10 @@ const store = createStore({
       state.path = "data/" + path.replace(/[^a-zA-Z0-9]/g, "_").replace(/\s/g, "_") + "/";
     },
     setTilesize(state, tilesize) {
-        state.tilesize = tilesize;
+      state.tilesize = tilesize;
     },
     setUnique(state, unique) {
-        state.unique = unique;
+      state.unique = !!unique;
     },
     // Tiles
     async resetTiles(state, tiles = []) {

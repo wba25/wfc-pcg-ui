@@ -63,14 +63,24 @@
       </v-row>
       <v-row justify="end">
         <v-col cols="auto">
-          <v-btn size="large" color="secondary" @click="$router.go(-1)"
-            >Cancelar</v-btn
+          <v-btn
+            size="large"
+            color="secondary"
+            @click="$router.go(-1)"
+            :disabled="loading"
           >
+            Cancelar
+          </v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn size="large" color="primary" @click="next"
-            >Definir adjacência</v-btn
+          <v-btn
+            size="large"
+            color="primary"
+            :loading="loading"
+            @click="next"
           >
+            Definir adjacência
+          </v-btn>
         </v-col>
       </v-row>
     </v-responsive>
@@ -98,6 +108,7 @@ export default {
       unique: false,
       tiles: [],
       errors: [],
+      loading: false
     };
   },
   watch: {
@@ -165,6 +176,7 @@ export default {
     },
     next() {
       if (this.validateTiles()) {
+        this.loading = true;
         this.setRegisterStage(1);
       }
     },

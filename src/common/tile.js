@@ -27,3 +27,19 @@ export async function loadAssets(path, tile, unique) {
     }
     return assets;
 }
+
+export function neighborIsValid(neighbor, tiles) {    
+    const parts = neighbor.split(" ");
+    const [tileName, tileIndex] = [parts[0], parts.length > 1 ? parseInt(parts[1]) : 0];
+    let tile = tiles.filter(t => t.name === tileName);
+    if (tile.length === 0) return false;
+    tile = tile[0];
+    if ((tileIndex + 1) > getQuantityOfTileSymmetry(tile.symmetry, true)) return false;
+    return true;
+}
+
+export function neighborPairIsValid(neighbor, tiles) {
+    const leftNeighbor = neighbor["left"];
+    const rightNeighbor = neighbor["right"];
+    return neighborIsValid(leftNeighbor, tiles) && neighborIsValid(rightNeighbor, tiles);
+}

@@ -3,7 +3,7 @@
     <v-responsive class="d-flex align-center fill-height">
       <v-row>
         <v-col cols="auto" v-for="neighbor in neighbors">
-          <NeighborForm 
+          <NeighborForm
             :neighbor-id="neighbor.id"
             :neighbor-options="neighborsOpts"
             :onDelete="() => removeNeighborWithId(neighbor.id)"
@@ -34,10 +34,14 @@
       </v-row>
       <v-row justify="end">
         <v-col cols="auto">
-          <v-btn size="large" color="secondary" @click="setRegisterStage(0)">Ajustar tiles</v-btn>
+          <v-btn size="large" color="secondary" @click="setRegisterStage(0)"
+            >Ajustar tiles</v-btn
+          >
         </v-col>
         <v-col cols="auto">
-          <v-btn size="large" color="primary" :loading="loading" @click="submit">Gerar Mapa</v-btn>
+          <v-btn size="large" color="primary" :loading="loading" @click="submit"
+            >Salvar Mapa</v-btn
+          >
         </v-col>
       </v-row>
     </v-responsive>
@@ -45,84 +49,92 @@
 </template>
 
 <script>
-  import NeighborForm from '@/components/NeighborForm.vue';
-  import { mapGetters, mapActions, mapMutations } from "vuex";
-  import { v4 as uuidv4 } from "uuid";
-  export default {
-    components: {
-      NeighborForm
+import NeighborForm from "@/components/NeighborForm.vue";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import { neighborPairIsValid } from "./../common/tile";
+import { v4 as uuidv4 } from "uuid";
+export default {
+  components: {
+    NeighborForm,
+  },
+  data() {
+    return {
+      errors: [],
+      neighbors: [],
+      loading: false,
+      neighborsOpts: [],
+    };
+  },
+  watch: {},
+  mounted() {
+    this.initNeighborsOpts();
+    this.initNeighborsData(this.getNeighbors);
+  },
+  computed: {
+    ...mapGetters(["tilemap", "getNeighbors", "getNeighbor"]),
+  },
+  methods: {
+    ...mapActions(["storeProcess"]),
+    ...mapMutations(["setRegisterStage", "removeNeighbor"]),
+    removeNeighborWithId(neighborId) {
+      this.neighbors = this.neighbors.filter((n) => n.id !== neighborId);
+      this.removeNeighbor(neighborId);
     },
-    data () {
-      return {
-        errors: [],
-        neighbors: [],
-        loading: false,
-        neighborsOpts: [],
-      }
+    generateNewNeighborId() {
+      return uuidv4();
     },
-    watch: {},
-    mounted () {
-      this.initNeighborsOpts();
-      this.initNeighborsData(this.getNeighbors);
-    },
-    computed: {
-      ...mapGetters(["tilemap", "getNeighbors"])
-    },
-    methods: {
-      ...mapActions(["storeProcess"]),
-      ...mapMutations(["setRegisterStage", "removeNeighbor"]),
-      removeNeighborWithId(neighborId) {
-        this.neighbors = this.neighbors.filter((n) => n.id !== neighborId);
-        this.removeNeighbor(neighborId);
-      },
-      generateNewNeighborId() {
-        return uuidv4();
-      },
-      initNeighborsData(rawNeighbors) {
-        Object.keys(rawNeighbors).forEach((neighborId) => {
+    initNeighborsData(rawNeighbors) {
+      Object.keys(rawNeighbors).forEach((neighborId) => {
+        const neighbor = this.getNeighbor(neighborId);
+        if (
+          neighborPairIsValid(neighbor, this.tilemap.tiles)
+        ) {
           this.neighbors.push({
             id: neighborId,
           });
+        } else {
+          this.removeNeighbor(neighborId);
+        }
+      });
+    },
+    initNeighborsOpts() {
+      this.neighborsOpts = this.tilemap.tiles;
+      // for (let i = 0; i < this.tilemap.tiles.length; i++) {
+      //   this.neighborsOpts.push(
+      //     {
+      //       data: this.tilemap.tiles[i],
+      //     }
+      //   );
+      //   // `${this.tilemap.tiles[i].name} ${j}`);
+      //   // for (let j = 0; j < this.tilemap.tiles[i].assets.length; j++) {
+      //   // }
+      // }
+    },
+    async submit() {
+      this.loading = true;
+      this.errors = [];
+      if (this.neighbors.length === 0) {
+        this.errors.push({
+          title: "Erro",
+          text: "É necessário adicionar pelo menos um vizinho",
         });
-      },
-      initNeighborsOpts(){
-        this.neighborsOpts = this.tilemap.tiles;
-        // for (let i = 0; i < this.tilemap.tiles.length; i++) {
-        //   this.neighborsOpts.push(
-        //     {
-        //       data: this.tilemap.tiles[i],
-        //     }
-        //   );
-        //   // `${this.tilemap.tiles[i].name} ${j}`);
-        //   // for (let j = 0; j < this.tilemap.tiles[i].assets.length; j++) {
-        //   // }
-        // }
-      },
-      async submit() {
-        this.loading = true;
-        this.errors = [];
-        if (this.neighbors.length === 0) {
+      }
+      if (this.errors.length === 0) {
+        try {
+          // TODO: corrigir
+          let res = await this.storeProcess(this.tilemap);
+          if (!res) {
+            throw "Error no servidor";
+          }
+        } catch (error) {
           this.errors.push({
-            title: "Erro",
-            text: "É necessário adicionar pelo menos um vizinho"
+            title: "Erro ao criar mapa",
+            text: error,
           });
         }
-        if (this.errors.length === 0) {
-          try {
-            // TODO: corrigir
-            let res = await this.storeProcess(this.tilemap);
-            if (!res) {
-              throw "Error no servidor";
-            }
-          } catch (error) {
-            this.errors.push({
-              title: "Erro ao criar mapa",
-              text: error
-            });
-          }
-        }
-        this.loading = false;
       }
-    }
-  }
+      this.loading = false;
+    },
+  },
+};
 </script>
