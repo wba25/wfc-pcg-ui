@@ -31,6 +31,9 @@
             density="compact"
             inset
             hide-details
+            false-icon="mdi-close-circle"
+            true-icon="mdi-check-circle"
+            hint="Marque essa opção caso queira definir as variações dos tiles manualmente. Caso contrário, o sistema irá gerar as variações automaticamente."
             :disabled="tiles.length > 0"
           ></v-switch>
         </v-col>
