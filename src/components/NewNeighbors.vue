@@ -52,6 +52,7 @@
 import NeighborForm from "@/components/NeighborForm.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { neighborPairIsValid } from "./../common/tile";
+  import { readFileAsDataURL } from "../common/util";
 import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
@@ -99,16 +100,6 @@ export default {
     },
     initNeighborsOpts() {
       this.neighborsOpts = this.tilemap.tiles;
-      // for (let i = 0; i < this.tilemap.tiles.length; i++) {
-      //   this.neighborsOpts.push(
-      //     {
-      //       data: this.tilemap.tiles[i],
-      //     }
-      //   );
-      //   // `${this.tilemap.tiles[i].name} ${j}`);
-      //   // for (let j = 0; j < this.tilemap.tiles[i].assets.length; j++) {
-      //   // }
-      // }
     },
     async submit() {
       this.loading = true;
@@ -121,11 +112,18 @@ export default {
       }
       if (this.errors.length === 0) {
         try {
-          // TODO: corrigir
-          let res = await this.storeProcess(this.tilemap);
+          const payload = this.tilemap;
+          for (let i = 0; i < payload.tiles.length; i++) {
+            const tile = payload.tiles[i];
+            for (let j = 0; j < tile.assets.length; j++) {
+              tile.assets[j] = await readFileAsDataURL(tile.assets[j]);
+            }
+          }
+          const res = await this.storeProcess(this.tilemap);
           if (!res) {
             throw "Error no servidor";
           }
+          this.$router.push('/');
         } catch (error) {
           this.errors.push({
             title: "Erro ao criar mapa",
