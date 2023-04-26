@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "serve": "vite",
+    "postinstall": "vite build",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
     "axios": "^1.3.5",
+    "express": "^4.18.2",
     "roboto-fontface": "*",
+    "serve-static": "^1.15.0",
     "tiny-emitter": "^2.1.0",
     "uuid": "^9.0.0",
     "vue": "^3.2.38",
