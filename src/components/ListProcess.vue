@@ -9,7 +9,7 @@
         </v-col>
         <v-spacer />
         <v-col cols="auto">
-          <v-btn :disabled="loadingProcess" size="large" color="blue" role="link" @click="$router.push('/novo')">Novo</v-btn>
+          <v-btn :disabled="loadingProcess" size="large" color="blue" role="link" @click="goToNew">Novo</v-btn>
         </v-col>
       </v-row>
       <v-table v-if="!loading" density="comfortable" :fixed-header="true">
@@ -82,6 +82,18 @@
     methods: {
       ...mapActions(["indexProcess", "generate"]),
       ...mapMutations(["setRegisterStage", "setPath", "setTilesize", "setUnique", "resetTiles", "resetNeighbors"]),
+      goToNew() {
+        this.resetTileSet();
+        this.$router.push('/novo');
+      },
+      resetTileSet() {
+        this.setRegisterStage(0);
+        this.setPath("novo_tilemap");
+        this.setTilesize(8);
+        this.setUnique(false);
+        this.resetTiles();
+        this.resetNeighbors();
+      },
       formatPath(path) {
         return path.split("/")[1];
       },
