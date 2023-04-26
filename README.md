@@ -42,3 +42,7 @@ pnpm build
 ### Customize configuration
 
 See [Configuration Reference](https://vitejs.dev/config/).
+
+
+### Deploy on Heroku
+See [WFC Creator](https://wfc-creator-ui.herokuapp.com/)
