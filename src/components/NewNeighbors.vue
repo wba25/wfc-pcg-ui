@@ -2,10 +2,11 @@
   <v-container class="fill-height" :fluid="true">
     <v-responsive class="d-flex align-center fill-height">
       <v-row>
-        <v-col cols="auto" v-for="neighbor in neighbors">
+        <v-col cols="auto" v-for="(neighbor, index) in neighbors">
           <NeighborForm
             :neighbor-id="neighbor.id"
             :neighbor-options="neighborsOpts"
+            :previous-neighbor-id="index === 0 ? null : neighbors[index - 1].id"
             :onDelete="() => removeNeighborWithId(neighbor.id)"
             :unique="tilemap.unique"
           />
@@ -52,7 +53,7 @@
 import NeighborForm from "@/components/NeighborForm.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { neighborPairIsValid } from "./../common/tile";
-  import { readFileAsDataURL } from "../common/util";
+import { readFileAsDataURL } from "../common/util";
 import { v4 as uuidv4 } from "uuid";
 export default {
   components: {

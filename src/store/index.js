@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import { getObjValues } from "../common/util.js";
 import { loadAssets } from "../common/tile.js";
+import { getQuantityOfTileSymmetry } from "../common/validation.js";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { $emit } from "../common/event";
@@ -103,6 +104,13 @@ const store = createStore({
         return tile.assets[index] || null;
       }
       return null;
+    },
+    getNeighborIsValid: (state, getters) => (tileName, index) => {
+      let tile = getters.tilemap.tiles.filter(t => t.name === tileName)[0] || null;
+      if (tile) {
+        return getQuantityOfTileSymmetry(tile.symmetry, true) > index;
+      }
+      return false;
     },
     // Neighbors
     getNeighbors(state) {

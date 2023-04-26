@@ -105,6 +105,9 @@
         type: String,
         required: true,
       },
+      previousNeighborId: {
+        type: String
+      },
       onDelete: {
         type: Function,
         required: true,
@@ -133,6 +136,9 @@
     watch: {
       left(newLeft, oldLeft) {
         if (newLeft !== oldLeft) {
+          if (!this.getNeighborIsValid(this.left, this.leftIndex)) {
+            this['leftIndex'] = 0;
+          }
           this.loadImage(this.left).then((img) => {
             this.leftImage = img;
           });
@@ -141,6 +147,9 @@
       },
       right(newRight, oldRight) {
         if (newRight !== oldRight) {
+          if (!this.getNeighborIsValid(this.right, this.rightIndex)) {
+            this['rightIndex'] = 0;
+          }
           this.loadImage(this.right).then((img) => {
             this.rightImage = img;
           });
@@ -189,8 +198,18 @@
           this.rightIndex = 0;
         }
       } else {
-        this.left = this.neighborOptions[0].name;
-        this.right = this.neighborOptions[0].name;
+        if (this.previousNeighborId) {
+          const previousNeighbor = this.getNeighbor(this.previousNeighborId);
+          const previosLeftParts = previousNeighbor["left"].split(" ");
+          const previosRightParts = previousNeighbor["right"].split(" ");
+          this.left = previosLeftParts[0];
+          this.right = previosRightParts[0];
+          this.leftIndex = parseInt(previosLeftParts[1] || 0);
+          this.rightIndex = parseInt(previosRightParts[1] || 0);
+        } else {
+          this.left = this.neighborOptions[0].name;
+          this.right = this.neighborOptions[0].name;
+        }
         this.commitNeighborData();
       }
       this.loadImage(this.left, this.leftIndex).then((img) => {
@@ -201,7 +220,7 @@
       });
     },
     computed: {
-      ...mapGetters(["getNeighbor", "getTileAsset"]),
+      ...mapGetters(["getNeighbor", "getTileAsset", "getNeighborIsValid"]),
       leftVariants() {
         return this.getTileVariants(this.left);
       },
