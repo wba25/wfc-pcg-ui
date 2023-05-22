@@ -73,7 +73,7 @@
               placeholder="Selecione uma imagem"
               prepend-icon=""
               density="compact"
-              accept="image/*"
+              accept="image/png"
               @change="previewFile(assets[index])"
               class="tile-form-input"
               bg-color="rgba(255, 255, 255, 0.8)"

@@ -53,7 +53,7 @@
 import NeighborForm from "@/components/NeighborForm.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { neighborPairIsValid } from "./../common/tile";
-import { readFileAsDataURL } from "../common/util";
+import { readFileAsBase64String } from "../common/util";
 import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
@@ -117,10 +117,10 @@ export default {
           for (let i = 0; i < payload.tiles.length; i++) {
             const tile = payload.tiles[i];
             for (let j = 0; j < tile.assets.length; j++) {
-              tile.assets[j] = await readFileAsDataURL(tile.assets[j]);
+              tile.assets[j] = await readFileAsBase64String(tile.assets[j]);
             }
           }
-          const res = await this.storeProcess(this.tilemap);
+          const res = await this.storeProcess(payload);
           if (!res) {
             throw "Error no servidor";
           }
