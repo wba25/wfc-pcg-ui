@@ -120,7 +120,7 @@
             downloadFile(blob, tileName + ".png");
           }
         } catch (error) {
-          alert(error);
+          alert("A geração terminou em uma contradição. Tente novamente. Caso a situação persista, revise os detalhes do tilemap.");
         }
         delete this.loadingProcesses[path];
       },

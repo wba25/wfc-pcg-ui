@@ -34,7 +34,7 @@ const store = createStore({
     async resetTiles(state, tiles = []) {
       let payload = {};
       for (let i = 0; i < tiles.length; i++) {
-        let assets = await loadAssets(state.path, tiles[i], state.unique);
+        let assets = await loadAssets(tiles[i], state.unique);
         payload[uuidv4()] = {
           name: tiles[i]["name"] || "",
           symmetry: tiles[i]["symmetry"] || "X",

@@ -1,7 +1,7 @@
 import { getQuantityOfTileSymmetry } from "./validation";
 
-export function getAssetUrl(tilemapPath, assetName) {
-    return process.env.VUE_APP_SERVER_URL + "/" + tilemapPath + assetName + ".png";
+export function getAssetUrl(tile, index=0) {
+    return tile.assets[index];
 }
 
 export function getBlobFromURL(url, fileName) {
@@ -13,16 +13,16 @@ export function getBlobFromURL(url, fileName) {
     });
 }
 
-export async function loadAssets(path, tile, unique) {
+export async function loadAssets(tile, unique) {
     let assets = [];
     if (unique) {
         const quantity = getQuantityOfTileSymmetry(tile.symmetry, unique);
         for (let i = 0; i < quantity; i++) {
-            let file = await getBlobFromURL(getAssetUrl(path, tile.name + " " + i), tile.name + " " + i + ".png");
+            let file = await getBlobFromURL(getAssetUrl(tile, i), tile.name + " " + i + ".png");
             assets.push([file]);
         }
     } else {
-        let file = await getBlobFromURL(getAssetUrl(path, tile.name), tile.name + ".png");
+        let file = await getBlobFromURL(getAssetUrl(tile), tile.name + ".png");
         assets.push([file]);
     }
     return assets;
