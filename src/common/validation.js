@@ -11,7 +11,7 @@ export function validateTilesNames(tiles) {
 
 export function validateTilesWeights(tiles) {
     for (let i = 0; i < tiles.length; i++) {
-        if(tiles[i].weight > 1 || tiles[i].weight < 0) {
+        if(tiles[i].weight > 2 || tiles[i].weight < 0) {
             return `${i+1}º tile com peso inválido`;
         }
     }

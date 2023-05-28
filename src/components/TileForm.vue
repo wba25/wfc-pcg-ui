@@ -42,7 +42,7 @@
           v-model="weight"
           label="Peso"
           thumb-label
-          max="1"
+          max="2"
           min="0"
           class="tile-form-input"
           bg-color="rgba(255, 255, 255, 0.8)"
