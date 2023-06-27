@@ -139,7 +139,7 @@
           if (!this.getNeighborIsValid(this.left, this.leftIndex)) {
             this['leftIndex'] = 0;
           }
-          this.loadImage(this.left).then((img) => {
+          this.loadImage(this.left, this.leftIndex).then((img) => {
             this.leftImage = img;
           });
           this.commitNeighborData();
@@ -150,7 +150,7 @@
           if (!this.getNeighborIsValid(this.right, this.rightIndex)) {
             this['rightIndex'] = 0;
           }
-          this.loadImage(this.right).then((img) => {
+          this.loadImage(this.right, this.rightIndex).then((img) => {
             this.rightImage = img;
           });
           this.commitNeighborData();
@@ -212,12 +212,12 @@
         }
         this.commitNeighborData();
       }
-      this.loadImage(this.left, this.leftIndex).then((img) => {
-        this.leftImage = img;
-      });
-      this.loadImage(this.right, this.rightIndex).then((img) => {
-        this.rightImage = img;
-      });
+      // this.loadImage(this.left, this.leftIndex).then((img) => {
+      //   this.leftImage = img;
+      // });
+      // this.loadImage(this.right, this.rightIndex).then((img) => {
+      //   this.rightImage = img;
+      // });
     },
     computed: {
       ...mapGetters(["getNeighbor", "getTileAsset", "getNeighborIsValid"]),
@@ -251,7 +251,7 @@
         }
       },
       async loadImage(position, index=0) {
-        const loadedImage = await readFileAsDataURL(this.getTileAsset(position, index));
+        const loadedImage = await readFileAsDataURL(this.getTileAsset(position, this.unique ? index : 0));
         return loadedImage || this.placeholderImg;
       },
       commitNeighborData() {
