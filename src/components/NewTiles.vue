@@ -26,7 +26,11 @@
         <v-col cols="12">
           <v-switch
             v-model="unique"
-            label="Definir variações dos tiles manualmente"
+            :label="
+              unique ?
+              'Único (Cada variação do tile é única e deve ser definida manualmente)' :
+              'Único (As variações do tile serão geradas automaticamente)'
+            "
             color="primary"
             density="compact"
             inset
@@ -44,7 +48,8 @@
         </v-col>
         <v-col>
           <v-btn
-            density="compact"
+            color="primary"
+            size="small"
             icon="mdi-plus"
             @click="tiles.push({ id: generateNewTileId() })"
           ></v-btn>
@@ -67,22 +72,22 @@
       <v-row justify="end">
         <v-col cols="auto">
           <v-btn
-            size="large"
-            color="secondary"
+            variant="tonal"
             @click="$router.go(-1)"
             :disabled="loading"
+            prepend-icon="mdi mdi-chevron-left"
           >
-            Cancelar
+            Home
           </v-btn>
         </v-col>
         <v-col cols="auto">
           <v-btn
-            size="large"
             color="primary"
             :loading="loading"
             @click="next"
+            append-icon="mdi mdi-chevron-right"
           >
-            Definir adjacência
+            Definir Adjacências
           </v-btn>
         </v-col>
       </v-row>

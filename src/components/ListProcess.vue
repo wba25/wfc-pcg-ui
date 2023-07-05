@@ -3,13 +3,23 @@
     <v-responsive class="d-flex align-center fill-height">
       <v-row class="d-flex align-center justify-center pb-14">
         <v-col cols="auto">
-          <h1>
-            Gerador de tilemaps com <a href="https://github.com/mxgmn/WaveFunctionCollapse" target="_blank">Wave Function Collapse</a>
-          </h1>
+          <h2>
+            Gerador de imagem procedural com <a href="https://github.com/mxgmn/WaveFunctionCollapse" target="_blank">Wave Function Collapse</a>
+          </h2>
+          <p class="text-subtitle-1">Crie um novo gerador de imagens com seu tilemap de preferência ou explore os exemplos abaixo</p>
         </v-col>
         <v-spacer />
         <v-col cols="auto">
-          <v-btn :disabled="loadingProcess" size="large" color="blue" role="link" @click="goToNew">Novo</v-btn>
+          <v-btn
+            :disabled="loadingProcess"
+            variant="flat"
+            color="primary"
+            role="link"
+            prepend-icon="mdi mdi-earth-box-plus"
+            @click="goToNew"
+          >
+            Criar Novo Gerador
+          </v-btn>
         </v-col>
       </v-row>
       <v-table v-if="!loading" density="comfortable" :fixed-header="true">
@@ -43,6 +53,7 @@
                 :loading="loadingProcesses[item.path]"
                 @click="generateTilemap(item.path)"
                 icon="mdi-image-refresh"
+                class="text-primary"
                 density="compact"
                 flat
               ></v-btn>

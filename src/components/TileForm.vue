@@ -1,95 +1,97 @@
 <template>
-  <v-card
-    width="325px"
-    height="325px"
-    elevation="6"
-    class="overflow-y-auto pa-4 ml-4"
-    :image="bgImage"
-    color="#bdbdbd"
-  >
-    <div class="float-btn">
-      <v-btn color="error" density="compact" icon="mdi-close-circle" variant="plain" @click="onDelete"></v-btn>
-    </div>
-    <v-card-text>
-      <v-form>
-        <v-row>
-          <v-col cols="6">
-            <v-text-field
-              v-model="name"
-              label="Nome"
-              bg-color="rgba(255, 255, 255, 0.8)"
-              variant="plain"
-              hide-details
-              required
-            />
-          </v-col>
-          <v-col cols="6">
-            <v-select
-              v-model="symmetry"
-              label="Simetria"
-              :items="symmetryItems"
-              item-title="text"
-              item-value="value"
-              class="tile-form-input mb-2"
-              bg-color="rgba(255, 255, 255, 0.8)"
-              variant="plain"
-              hide-details
-              required
-            ></v-select>
-          </v-col>
-        </v-row>
-        <v-slider
-          v-model="weight"
-          label="Peso"
-          thumb-label
-          max="2"
-          min="0"
-          class="tile-form-input"
-          bg-color="rgba(255, 255, 255, 0.8)"
-          variant="plain"
-          hide-details
-          required
-        >
-          <template v-slot:append>
-            <v-text-field
-              v-model="weight"
-              type="number"
-              style="width: 60px"
-              density="compact"
-              hide-details
-              max="1"
-              min="0"
-              class="tile-form-input"
-              bg-color="rgba(255, 255, 255, 0.8)"
-              variant="plain"
-            ></v-text-field>
-          </template>
-        </v-slider>
-        <h4 class="headline my-2">Assets</h4>
-        <v-row class="mb-2" align="center" justify="space-between" no-gutters v-for="(asset, index) in assets">
-          <v-col cols="10">
-            <v-file-input
-              v-model="assets[index]"
-              placeholder="Selecione uma imagem"
-              prepend-icon=""
-              density="compact"
-              accept="image/png"
-              @change="previewFile(assets[index])"
-              class="tile-form-input"
-              bg-color="rgba(255, 255, 255, 0.8)"
-              variant="plain"
-              hide-details
-              required
-            ></v-file-input>
-          </v-col>
-          <v-col class="text-right" cols="2">
-            <v-btn density="compact" icon="mdi-minus" @click="assets.splice(asset, 1)"></v-btn>
-          </v-col>
-        </v-row>
-        <v-btn v-if="hasAddAssetButton" icon="mdi-plus" class="ml-1" density="compact" @click="assets.push(1)"></v-btn>
-      </v-form>
-    </v-card-text>
-  </v-card>
+  <v-expand-x-transition>
+    <v-card
+      width="325px"
+      height="325px"
+      elevation="6"
+      class="overflow-y-auto pa-4 ml-4"
+      :image="bgImage"
+      color="#bdbdbd"
+    >
+      <div class="float-btn">
+        <v-btn color="error" density="compact" icon="mdi-close-circle" variant="plain" @click="onDelete"></v-btn>
+      </div>
+      <v-card-text>
+        <v-form>
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                v-model="name"
+                label="Nome"
+                bg-color="rgba(255, 255, 255, 0.8)"
+                variant="plain"
+                hide-details
+                required
+              />
+            </v-col>
+            <v-col cols="6">
+              <v-select
+                v-model="symmetry"
+                label="Simetria"
+                :items="symmetryItems"
+                item-title="text"
+                item-value="value"
+                class="tile-form-input mb-2"
+                bg-color="rgba(255, 255, 255, 0.8)"
+                variant="plain"
+                hide-details
+                required
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-slider
+            v-model="weight"
+            label="Peso"
+            thumb-label
+            max="2"
+            min="0"
+            class="tile-form-input"
+            bg-color="rgba(255, 255, 255, 0.8)"
+            variant="plain"
+            hide-details
+            required
+          >
+            <template v-slot:append>
+              <v-text-field
+                v-model="weight"
+                type="number"
+                style="width: 60px"
+                density="compact"
+                hide-details
+                max="1"
+                min="0"
+                class="tile-form-input"
+                bg-color="rgba(255, 255, 255, 0.8)"
+                variant="plain"
+              ></v-text-field>
+            </template>
+          </v-slider>
+          <h4 class="headline my-2">Assets</h4>
+          <v-row class="mb-2" align="center" justify="space-between" no-gutters v-for="(asset, index) in assets">
+            <v-col cols="10">
+              <v-file-input
+                v-model="assets[index]"
+                placeholder="Selecione uma imagem"
+                prepend-icon=""
+                density="compact"
+                accept="image/png"
+                @change="previewFile(assets[index])"
+                class="tile-form-input"
+                bg-color="rgba(255, 255, 255, 0.8)"
+                variant="plain"
+                hide-details
+                required
+              ></v-file-input>
+            </v-col>
+            <v-col class="text-right" cols="2">
+              <v-btn density="compact" icon="mdi-minus" @click="assets.splice(asset, 1)"></v-btn>
+            </v-col>
+          </v-row>
+          <v-btn v-if="hasAddAssetButton" icon="mdi-plus" class="ml-1" density="compact" @click="assets.push(1)"></v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-expand-x-transition>
 </template>
 
 <script>
