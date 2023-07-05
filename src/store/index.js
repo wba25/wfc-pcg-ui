@@ -130,6 +130,9 @@ const store = createStore({
     generate: async function({ state, commit }, name) {
       return axios.get(process.env.VUE_APP_SERVER_URL + "/api/processes/" + name + "/generate");
     },
+    generateNeighbors: async function({ state, commit }, name) {
+      return axios.get(process.env.VUE_APP_SERVER_URL + "/api/processes/" + name + "/neighbors");
+    },
   }
 });
 

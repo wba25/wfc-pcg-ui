@@ -13,10 +13,25 @@
         </v-col>
         <v-col>
           <v-btn
-            density="compact"
+            color="primary"
+            size="small"
             icon="mdi-plus"
             @click="neighbors.push({ id: generateNewNeighborId() })"
           ></v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-if="neighbors.length === 0">
+        <v-col>
+          <v-btn
+            color="primary"
+            size="small"
+            variant="outlined"
+            prepend-icon="mdi mdi-earth-box"
+            :loading="loading"
+            @click="autofill"
+          >
+            Preencher Adjacências Automaticamente
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
@@ -35,14 +50,23 @@
       </v-row>
       <v-row justify="end">
         <v-col cols="auto">
-          <v-btn size="large" color="secondary" @click="setRegisterStage(0)"
-            >Ajustar tiles</v-btn
+          <v-btn
+            variant="tonal"
+            @click="setRegisterStage(0)"
+            prepend-icon="mdi mdi-chevron-left"
           >
+            Ajustar tiles
+          </v-btn>
         </v-col>
         <v-col cols="auto">
-          <v-btn size="large" color="primary" :loading="loading" @click="submit"
-            >Salvar Mapa</v-btn
+          <v-btn
+            color="primary"
+            :loading="loading"
+            @click="submit"
+            append-icon="mdi mdi-chevron-right"
           >
+            Salvar Tilemap
+          </v-btn>
         </v-col>
       </v-row>
     </v-responsive>
@@ -53,7 +77,7 @@
 import NeighborForm from "@/components/NeighborForm.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import { neighborPairIsValid } from "./../common/tile";
-import { readFileAsBase64String } from "../common/util";
+import { handleHTTPRequestResposte, readFileAsBase64String } from "../common/util";
 import { v4 as uuidv4 } from "uuid";
 export default {
   components: {
@@ -73,11 +97,11 @@ export default {
     this.initNeighborsData(this.getNeighbors);
   },
   computed: {
-    ...mapGetters(["tilemap", "getNeighbors", "getNeighbor"]),
+    ...mapGetters(["tilemap", "getNeighbors", "getNeighbor", "getPathName"]),
   },
   methods: {
-    ...mapActions(["storeProcess"]),
-    ...mapMutations(["setRegisterStage", "removeNeighbor"]),
+    ...mapActions(["storeProcess", "generateNeighbors"]),
+    ...mapMutations(["setRegisterStage", "removeNeighbor", "resetNeighbors"]),
     removeNeighborWithId(neighborId) {
       this.neighbors = this.neighbors.filter((n) => n.id !== neighborId);
       this.removeNeighbor(neighborId);
@@ -101,6 +125,23 @@ export default {
     },
     initNeighborsOpts() {
       this.neighborsOpts = this.tilemap.tiles;
+    },
+    async autofill() {
+      this.loading = true;
+      this.errors = [];
+      try {
+        const raw = await this.generateNeighbors(this.getPathName);
+        let neighborsData = handleHTTPRequestResposte(raw);
+        this.resetNeighbors(neighborsData);
+        this.initNeighborsData(this.getNeighbors);
+      } catch (error) {
+        console.log(error);
+        this.errors.push({
+          title: "Erro ao criar vizinhos automaticamente",
+          text: error,
+        });
+      }
+      this.loading = false;
     },
     async submit() {
       this.loading = true;
