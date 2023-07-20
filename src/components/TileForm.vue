@@ -119,12 +119,12 @@
         assets: [],
         bgImage: '',
         symmetryItems: [
-          { text: 'L', value: 'L' },
+          { text: 'X', value: 'X' },
           { text: 'T', value: 'T' },
           { text: 'I', value: 'I' },
+          { text: 'L', value: 'L' },
           { text: '\\', value: '\\' },
-          { text: 'F', value: 'F' },
-          { text: 'X', value: 'X' },
+          // { text: 'F', value: 'F' }, // sem suporte
         ],
         placeholderImg: 'https://t3.ftcdn.net/jpg/03/45/05/92/360_F_345059232_CPieT8RIWOUk4JqBkkWkIETYAkmz2b75.jpg'
       }

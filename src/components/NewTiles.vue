@@ -16,9 +16,39 @@
             :prefix="tileSize + ' X '"
             suffix="px"
             type="number"
+            min="0"
+            step="1"
             variant="outlined"
             density="comfortable"
             label="Tamanho dos tiles"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row class="d-flex">
+        <v-col cols="2" class="text-left">
+          <p class="pb-6">
+            <span class="text-caption">Imagem resultado terá:</span> <br/>
+            <span class="text-overline">{{ mapSizeW * tileSize }} x {{ mapSizeH * tileSize}} px</span>
+          </p>
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            v-model="mapSizeW"
+            suffix="tiles"
+            type="number"
+            variant="outlined"
+            density="comfortable"
+            label="Largura"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            v-model="mapSizeH"
+            suffix="tiles"
+            type="number"
+            variant="outlined"
+            density="comfortable"
+            label="Altura"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -43,7 +73,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="auto" v-for="tile in tiles">
+        <v-col cols="auto" v-for="tile in tiles" :key="tile.id">
           <TileForm :tile-id="tile.id" :unique="unique" :onDelete="() => removeTileWithId(tile.id)"/>
         </v-col>
         <v-col>
@@ -73,7 +103,7 @@
         <v-col cols="auto">
           <v-btn
             variant="tonal"
-            @click="$router.go(-1)"
+            to="/"
             :disabled="loading"
             prepend-icon="mdi mdi-chevron-left"
           >
@@ -97,7 +127,7 @@
 
 <script>
 import TileForm from "@/components/TileForm.vue";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { v4 as uuidv4 } from "uuid";
 import {
   validateTilesNames,
@@ -113,6 +143,8 @@ export default {
     return {
       tilemapName: "",
       tileSize: 0,
+      mapSizeW: 0,
+      mapSizeH: 0,
       unique: false,
       tiles: [],
       errors: [],
@@ -130,6 +162,16 @@ export default {
         this.setTilesize(this.tileSize);
       }
     },
+    mapSizeW(newW, oldW) {
+      if (newW !== oldW) {
+        this.setImageWidth(newW);
+      }
+    },
+    mapSizeH(newH, oldH) {
+      if (newH !== oldH) {
+        this.setImageHeight(newH);
+      }
+    },
     unique(newUnique, oldUnique) {
       if (newUnique !== oldUnique) {
         this.setUnique(newUnique);
@@ -140,13 +182,16 @@ export default {
     this.tilemapName = this.getPathName;
     this.tileSize = this.getTilesize;
     this.unique = this.getUnique;
+    this.mapSizeW = this.getImageWidth;
+    this.mapSizeH = this.getImageHeight;
     this.initTiles(this.getTiles);
   },
   computed: {
-    ...mapGetters(["tilemap", "getPathName", "getTilesize", "getTiles", "getUnique"]),
+    ...mapGetters(["tilemap", "getPathName", "getTilesize", "getTiles", "getUnique", "getImageWidth", "getImageHeight"]),
   },
   methods: {
-    ...mapMutations(["setPath", "setTilesize", "setRegisterStage", "removeTile", "setUnique"]),
+    ...mapActions(["storeProcess"]),
+    ...mapMutations(["setPath", "setTilesize", "setRegisterStage", "removeTile", "setUnique", "setImageWidth", "setImageHeight"]),
     removeTileWithId(tileId) {
       this.tiles = this.tiles.filter((tile) => tile.id !== tileId);
       this.removeTile(tileId);

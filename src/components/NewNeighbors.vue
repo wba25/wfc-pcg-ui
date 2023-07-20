@@ -2,7 +2,7 @@
   <v-container class="fill-height" :fluid="true">
     <v-responsive class="d-flex align-center fill-height">
       <v-row>
-        <v-col cols="auto" v-for="(neighbor, index) in neighbors">
+        <v-col cols="auto" v-for="(neighbor, index) in neighbors" :key="neighbor.id">
           <NeighborForm
             :neighbor-id="neighbor.id"
             :neighbor-options="neighborsOpts"
@@ -130,18 +130,22 @@ export default {
       this.loading = true;
       this.errors = [];
       try {
+        await this.createTilemap(() => {});
         const raw = await this.generateNeighbors(this.getPathName);
         let neighborsData = handleHTTPRequestResposte(raw);
         this.resetNeighbors(neighborsData);
         this.initNeighborsData(this.getNeighbors);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.errors.push({
           title: "Erro ao criar vizinhos automaticamente",
           text: error,
         });
       }
       this.loading = false;
+    },
+    gotoHome() {
+      this.$router.push('/');
     },
     async submit() {
       this.loading = true;
@@ -151,29 +155,32 @@ export default {
           title: "Erro",
           text: "É necessário adicionar pelo menos um vizinho",
         });
-      }
-      if (this.errors.length === 0) {
-        try {
-          const payload = this.tilemap;
-          for (let i = 0; i < payload.tiles.length; i++) {
-            const tile = payload.tiles[i];
-            for (let j = 0; j < tile.assets.length; j++) {
-              tile.assets[j] = await readFileAsBase64String(tile.assets[j]);
-            }
-          }
-          const res = await this.storeProcess(payload);
-          if (!res) {
-            throw "Error no servidor";
-          }
-          this.$router.push('/');
-        } catch (error) {
-          this.errors.push({
-            title: "Erro ao criar mapa",
-            text: error,
-          });
-        }
+      } else if (this.errors.length === 0) {
+        await this.createTilemap(this.gotoHome);
       }
       this.loading = false;
+    },
+    async createTilemap(callback) {
+      try {
+        const payload = JSON.parse(JSON.stringify(this.tilemap));
+        for (let i = 0; i < this.tilemap.tiles.length; i++) {
+          const tile = this.tilemap.tiles[i];
+          for (let j = 0; j < tile.assets.length; j++) {
+            payload.tiles[i].assets[j] = await readFileAsBase64String(tile.assets[j]);
+          }
+        }
+        const res = await this.storeProcess(payload);
+        if (!res) {
+          throw "Error no servidor";
+        }
+        callback();
+      } catch (error) {
+        console.error(error);
+        this.errors.push({
+          title: "Erro ao criar tilemap",
+          text: error,
+        });
+      }
     },
   },
 };

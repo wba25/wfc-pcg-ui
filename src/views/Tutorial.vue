@@ -3,7 +3,7 @@
     <v-row class="d-flex align-center justify-center mt-8">
       <v-col cols="auto">
         <h2>Passo a passo para criar seu primeiro Gerador!</h2>
-        <p class="text-subtitle-1">Nesse tutorial você irá aprender a criar um gerador procedural de imagens compostas por um tilemap cadastrado.</p>
+        <p class="text-subtitle-1">Nesse tutorial você irá aprender a criar um gerador de imagens procedurais compostas por tiles definidos por você.</p>
       </v-col>
       <v-spacer />
       <v-col cols="auto">
@@ -47,7 +47,8 @@
             class="text-none text-black"
             color="primary"
             variant="outlined"
-            href="#"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSddxspJTNLMu8UbQ47XIU88jJgAySnhcQJlRa87G4KCwc-ECA/viewform?usp=sf_link"
+            target="_blank"
           >
             Opine sobre a usabilidade do sistema
           </v-btn>
@@ -56,7 +57,8 @@
             class="text-none text-black mt-4"
             color="primary"
             variant="flat"
-            href="#"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSe5_y7FMYsw0bCsA1L0BXZgIr6qXqMCNVcvIu0cs-7bIaAI-Q/viewform?usp=sf_link"
+            target="_blank"
           >
             Opine sobre a UX do sistema
           </v-btn>

@@ -12,6 +12,8 @@ const store = createStore({
       registerStage: 0,
       path: "data/novo_tilemap/",
       tilesize: 8,
+      imageWidth: 20,
+      imageHeight: 20,
       unique: false,
       tiles: {}, // {id: "", name: "", symmetry: "", weight: 0, assets: []} // base64 image
       neighbors: {} // { left: "", right: ""}
@@ -22,10 +24,16 @@ const store = createStore({
       state.registerStage = stage;
     },
     setPath(state, path) {
-      state.path = "data/" + path.replace(/[^a-zA-Z0-9]/g, "_").replace(/\s/g, "_") + "/";
+      state.path = "data/" + path.replace(/[^a-zA-Z0-9]/g, "_").replace(/\s/g, "_").toLowerCase() + "/";
     },
     setTilesize(state, tilesize) {
       state.tilesize = tilesize;
+    },
+    setImageWidth(state, imageWidth) {
+      state.imageWidth = imageWidth;
+    },
+    setImageHeight(state, imageHeight) {
+      state.imageHeight = imageHeight;
     },
     setUnique(state, unique) {
       state.unique = !!unique;
@@ -49,6 +57,13 @@ const store = createStore({
       state.tiles[payload["id"]] = payload["tile"];
     },
     removeTile(state, id) {
+      const deletedTile = state.tiles[id];
+      Object.getOwnPropertyNames(state.neighbors).forEach(neighborId => {
+        let neighbor = state.neighbors[neighborId];
+        if (neighbor.left.includes(deletedTile.name + " ") || neighbor.right.includes(deletedTile.name + " ")) {
+          delete state.neighbors[neighborId];
+        }
+      });
       delete state.tiles[id];
     },
     // Neighbors
@@ -78,6 +93,8 @@ const store = createStore({
         path: state.path,
         tilesize: state.tilesize,
         unique: state.unique,
+        width: state.imageWidth,
+        height: state.imageHeight,
         tiles: Object.getOwnPropertyNames(state.tiles).length !== 0 ? getObjValues(state.tiles) : [],
         neighbors: Object.getOwnPropertyNames(state.neighbors).length !== 0 ? getObjValues(state.neighbors) : []
       }
@@ -90,6 +107,12 @@ const store = createStore({
     },
     getUnique(state) {
       return state.unique;
+    },
+    getImageWidth(state) {
+      return state.imageWidth;
+    },
+    getImageHeight(state) {
+      return state.imageHeight;
     },
     // Tiles
     getTiles(state) {
