@@ -45,8 +45,9 @@
             thumb-label
             max="2"
             min="0"
-            class="tile-form-input"
+            class="tile-form-input mb-2"
             bg-color="rgba(255, 255, 255, 0.8)"
+            color="grey"
             variant="plain"
             hide-details
             required
@@ -66,8 +67,17 @@
               ></v-text-field>
             </template>
           </v-slider>
-          <h4 class="headline my-2">Assets</h4>
-          <v-row class="mb-2" align="center" justify="space-between" no-gutters v-for="(asset, index) in assets">
+          <v-row v-if="unique" class="bg-white" no-gutters>
+            <v-col>
+              <h4 class="headline">Assets:</h4>
+              <v-progress-linear
+                :model-value="(assets.length/cardinality) * 100"
+                height="10"
+                :color="assets.length == cardinality ? 'grey' : 'warning'"
+              ></v-progress-linear>
+            </v-col>
+          </v-row>
+          <v-row class="bg-white" align="center" justify="space-between" no-gutters v-for="(asset, index) in assets">
             <v-col cols="10">
               <v-file-input
                 v-model="assets[index]"
@@ -77,17 +87,27 @@
                 accept="image/png"
                 @change="previewFile(assets[index])"
                 class="tile-form-input"
-                bg-color="rgba(255, 255, 255, 0.8)"
+                :clearable="false"
                 variant="plain"
                 hide-details
                 required
-              ></v-file-input>
+              >
+                <template v-slot:prepend-inner>
+                  <v-icon
+                    class="cursor-pointer"
+                    :color="fileIsValid(assets[index]) ? 'grey' : 'warning'"
+                    :icon="'mdi ' + (fileIsValid(assets[index]) ? 'mdi-image-check' : 'mdi-image-remove')"
+                  ></v-icon>
+                </template>
+              </v-file-input>
             </v-col>
             <v-col class="text-right" cols="2">
-              <v-btn density="compact" icon="mdi-minus" @click="assets.splice(asset, 1)"></v-btn>
+              <v-btn class="" density="compact" icon="mdi-close" elevation="0" @click="assets.splice(asset, 1)"></v-btn>
             </v-col>
           </v-row>
-          <v-btn v-if="hasAddAssetButton" icon="mdi-plus" class="ml-1" density="compact" @click="assets.push(1)"></v-btn>
+          <v-fade-transition>
+            <v-btn v-if="hasAddAssetButton" color="primary" icon="mdi-image-plus-outline" class="ml-1 mt-1" elevation="20" density="compact" @click="assets.push(1)"></v-btn>
+          </v-fade-transition>
         </v-form>
       </v-card-text>
     </v-card>
@@ -182,6 +202,27 @@
           }
         }
       },
+      cardinality() {
+        if (this.unique) {
+          switch (this.symmetry) {
+            case "X":
+              return 1;
+            case "T":
+              return 4;
+            case "I":
+              return 2;
+            case "L":
+              return 4;
+            case "F":
+              return 8;
+            case "\\":
+              return 2;
+            default:
+              return 0;
+          }
+        }
+        return 1;
+      },
     },
     methods: {
       ...mapMutations(["addTile"]),
@@ -209,6 +250,12 @@
         if (files && files[0]) {
           reader.readAsDataURL(files[0]);
         }
+      },
+      fileIsValid(files) {
+        if (files && files[0]) {
+          return true;
+        }
+        return false;
       }
     },
   }
@@ -219,5 +266,8 @@
   top: 0;
   right: 0;
   z-index: 1;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>
