@@ -24,16 +24,11 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row class="d-flex">
-        <v-col cols="2" class="text-left">
-          <p class="pb-6">
-            <span class="text-caption">Imagem resultado terá:</span> <br/>
-            <span class="text-overline">{{ mapSizeW * tileSize }} x {{ mapSizeH * tileSize}} px</span>
-          </p>
-        </v-col>
+      <v-row v-if="false" class="d-flex">
         <v-col cols="3">
           <v-text-field
             v-model="mapSizeW"
+            :disabled="true"
             suffix="tiles"
             type="number"
             variant="outlined"
@@ -44,12 +39,19 @@
         <v-col cols="3">
           <v-text-field
             v-model="mapSizeH"
+            :disabled="true"
             suffix="tiles"
             type="number"
             variant="outlined"
             density="comfortable"
             label="Altura"
           ></v-text-field>
+        </v-col>
+        <v-col cols="2" class="text-left">
+          <p class="pb-6">
+            <span class="text-caption">Imagem resultado terá:</span> <br/>
+            <span class="text-overline">{{ mapSizeW * tileSize }} x {{ mapSizeH * tileSize}} px</span>
+          </p>
         </v-col>
       </v-row>
       <v-row>
